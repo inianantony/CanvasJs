@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "Step Line Chart";
+}
+
+<div id="chartContainer1" style="width: 49%; height: 300px;display: inline-block;"></div>
+<br />
+<div id="chartContainer2" style="width: 49%; height: 300px;display: inline-block;"></div>
+<br />
+<div id="chartContainer3" style="width: 49%; height: 300px;display: inline-block;"></div>
+<br />
+<div id="chartContainer4" style="width: 49%; height: 300px;display: inline-block;"></div>
+
+
+<script type="text/javascript">
+    $(function () {
+        var chart1 = new CanvasJS.Chart("chartContainer1",
+            {
+                title: {
+                    text: "Plot X"
+                },
+                width: 2000,
+                height:500,
+                animationEnabled: true,
+                axisX: {
+                    interval: 0.05,
+                    valueFormatString: "#.00"
+
+                },
+                axisY: {
+                    includeZero: false,
+                    interval: 1,
+                    valueFormatString: "#.00",
+                    stripLines: [
+                        {
+                            value: 3,
+                            label: "Line3"
+                        }
+                    ]
+                },
+                toolTip: {
+                    enabled: true,
+                    animationEnabled: true,
+                    contentFormatter: function (e) {
+                        var content = " ";
+                        for (var i = 0; i < e.entries.length; i++) {
+                            content += e.entries[i].dataPoint.x +
+                                "<strong>-" +
+                                e.entries[i].dataPoint.y +
+                                "%</strong>";
+                            content += "<br/>";
+                        }
+                        return content;
+                    }
+                },
+                data: [
+                    {
+                        type: "stepLine",
+                        markerSize: 5,
+                        dataPoints: [
+                            @for (decimal d = 1m; (d <= 1 && d >=-1); d= d-0.02m)
+                            {
+                                if (d == 0) { continue;}
+                                @Html.Raw("{ x: " + d + ", y: " + (1 + 1.4m + 0.3m * (1 + (d + 0.18m < 1m ? -(d + 0.18m) : 2m - (d + 0.18m))) / d + " },"))
+                            }
+                        ]
+                    }
+                ]
+            });
+        chart1.render();
+    });
+</script>
